@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 st.title("画像の代表色抽出アプリ")
+st.write('画像から色を摘出してくれます！')
 
 # 画像アップロード
 uploaded_file = st.file_uploader("画像をアップロードしてください", type=["jpg", "jpeg", "png", "avif"])
@@ -20,6 +21,9 @@ if uploaded_file is not None:
 
     # クラスタ数（抽出したい代表色の数）
     n_colors = st.slider("抽出する代表色の数", 2, 40, 20)
+
+    import time
+
 
     # K-meansでクラスタリング
     kmeans = KMeans(n_clusters=n_colors, random_state=0, n_init=10)
