@@ -17,27 +17,31 @@ if uploaded_file is not None:
 
     # NumPy配列に変換
     img_array = np.array(image)
+    pixels = img_array.reshape(-1, 3)  # すべてのピクセルを1次元に並べる
 
-    # 全ピクセルを (R,G,B) の形に並べる
-    pixels = img_array.reshape(-1, 3)
+    # クラスタ数（抽出したい代表色の数）
+    n_colors = st.slider("抽出する代表色の数", 2, 10, 5)
 
-    # 重複をなくしてユニークな色だけを取得
-    unique_colors = np.unique(pixels, axis=0)
+    # K-meansでクラスタリング
+    kmeans = kMeans(n_clusters=n_colors, random_state=0, n_init=10)
+    kmeans.fit(pixels)
 
-    # タプルのリストに変換
-    color_list = [tuple(color) for color in unique_colors]
+    # 各クラスタの代表色（RGB平均値）
+    colors = kmeans.cluster_centers_.astype(int)
+    st.subheader("抽出された代表色")
 
-    st.write(f"この画像には **{len(color_list)} 種類** の色が使われています。")
-    st.write(color_list[:100])  # 最初の100色を表示（多すぎると重いので）
-
-    # 表示を見やすくする（各色を小さなボックスで表示）
-    st.subheader("色見本（最初の50色）")
-    cols = st.columns(10)
-    for i, color in enumerate(color_list[:50]):
-        with cols[i % 10]:
-            hex_color = '#%02x%02x%02x' % color
+    # 結果を表示
+    cols = st.columns(n_colors)
+    for i, color in enumerate(colors):
+        r, g, b = color
+        hex_color = '#%02x%02x%02x' % (r, g, b)  # HEXに変換
+        with cols[i]:
             st.markdown(
-                f"<div style='background-color:{hex_color}; width:50px; height:50px; border:1px solid #000;'></div>",
+                f"""
+                <div style="background-color:{hex_color};
+                            width:100px;height:100px;
+                            border-radius:10px;margin:auto"></div>
+                <p style="text-align:center;">{hex_color}</p>
+                """,
                 unsafe_allow_html=True
             )
-            st.caption(str(color))
