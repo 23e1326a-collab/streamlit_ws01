@@ -19,7 +19,7 @@ if uploaded_file is not None:
     pixels = img_array.reshape(-1, 3)  # すべてのピクセルを1次元に並べる
 
     # クラスタ数（抽出したい代表色の数）
-    n_colors = st.slider("抽出する代表色の数", 10, 40, 20)
+    n_colors = st.slider("抽出する代表色の数", 2, 40, 20)
 
     # K-meansでクラスタリング
     kmeans = KMeans(n_clusters=n_colors, random_state=0, n_init=10)
