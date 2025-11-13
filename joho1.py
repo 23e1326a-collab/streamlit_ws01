@@ -1,14 +1,13 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-
-st.title('色摘出アプリ')
-st.write('取り込んだ画像を書くために必要な色を摘出します。')
-
 from PIL import Image
+import numpy as np
+from sklearn.cluster import KMeans
 
-# 画像ファイルをアップロード
-uploaded_file = st.file_uploader("画像をアップロードしてください", type=["jpg", "jpeg", "png","avif"])
+st.title("画像の代表色抽出アプリ")
+
+# 画像アップロード
+uploaded_file = st.file_uploader("画像をアップロードしてください", type=["jpg", "jpeg", "png", "avif"])
 
 if uploaded_file is not None:
     # 画像を開く（RGBに統一）
@@ -20,10 +19,10 @@ if uploaded_file is not None:
     pixels = img_array.reshape(-1, 3)  # すべてのピクセルを1次元に並べる
 
     # クラスタ数（抽出したい代表色の数）
-    n_colors = st.slider("抽出する代表色の数", 2, 10, 5)
+    n_colors = st.slider("抽出する代表色の数", 10, 40, 20)
 
     # K-meansでクラスタリング
-    kmeans = kMeans(n_clusters=n_colors, random_state=0, n_init=10)
+    kmeans = KMeans(n_clusters=n_colors, random_state=0, n_init=10)
     kmeans.fit(pixels)
 
     # 各クラスタの代表色（RGB平均値）
