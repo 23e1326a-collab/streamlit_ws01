@@ -8,7 +8,7 @@ st.title("画像の代表色抽出アプリ")
 st.write('画像から色を摘出してくれます！')
 
 # 画像アップロード
-uploaded_file = st.file_uploader("画像をアップロードしてください", type=["jpg", "jpeg", "png", "avif"])
+uploaded_file = st.file_uploader("画像をアップロードしてください。", type=["jpg", "jpeg", "png", "avif"])
 
 if uploaded_file is not None:
     # 画像を開く（RGBに統一）
@@ -48,3 +48,27 @@ if uploaded_file is not None:
                 """,
                 unsafe_allow_html=True
             )
+
+st.write('有名な色は以下の通りです。')
+colors = [
+    {"name": "赤",       "hex": "#ff0000", "rgb": (255, 0, 0)},
+    {"name": "青",      "hex": "#0000ff", "rgb": (0, 0, 255)},
+    {"name": "黄色",    "hex": "#ffff00", "rgb": (255, 255, 0)},
+    {"name": "緑",     "hex": "#008000", "rgb": (0, 128, 0)},
+    {"name": "黄緑",     "hex": "#9acd32", "rgb": (154, 205, 50)} ,
+    {"name": "紫",    "hex": "#800080", "rgb": (128, 0, 128)},
+    {"name": "オレンジ",    "hex": "#ffa500", "rgb": (255, 165, 0)},
+    {"name": "橙",   "hex": "#ff8c00", "rgb": (255, 140, 0)},  # 橙（明るいオレンジ）
+    {"name": "茶色",     "hex": "#8b4513", "rgb": (139, 69, 19)}
+]
+
+# 表の中身
+for c in colors:
+    st.markdown(
+        f"""
+        | <div style="width:30px; height:20px; background:{c['hex']}; 
+                       border-radius:4px; border:1px solid #00000033"></div>
+        | {c['name']} | {c['hex']} | 
+        """,
+        unsafe_allow_html=True
+    )
